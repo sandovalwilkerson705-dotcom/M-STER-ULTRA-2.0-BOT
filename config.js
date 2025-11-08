@@ -17,7 +17,7 @@ global.prefix = config.prefix || ".";
 
 // Lista de Owners
 global.owner = [
-    ["15167096032", "Owner", true],
+    ["5492644893953", "Owner", true],
     ["115724051816605"],
     ["5491151545427"],
     ["595986172767"],

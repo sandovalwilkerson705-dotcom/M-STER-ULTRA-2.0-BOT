@@ -1,6 +1,6 @@
 (async () => {
-let canalId = ["120363404109086734@newsletter"];  
-let canalNombre = ["👾 M-STER ULTRA BOT 👾"]
+let canalId = ["120363266665814365@newsletter"];  
+let canalNombre = ["👾 AZURA ULTRA 2.0 BOT 👾"]
   function setupConnection(conn) {
   conn.sendMessage2 = async (chat, content, m, options = {}) => {
     const firstChannel = { 
@@ -106,7 +106,7 @@ function isAllowedUser(sender) {
   const num = sender.replace(/\D/g, "");
   return lista.includes(num);
 }
-    
+
     //privado y admins
 
 const path = "./activos.json";
@@ -125,11 +125,11 @@ function guardarModos(data) {
 }
 
 let modos = cargarModos();
-    
+
     // Configuración de consola
     console.log(chalk.cyan(figlet.textSync("Azura Ultra Bot", { font: "Standard" })));    
     console.log(chalk.green("\n✅ Iniciando conexión...\n"));
-    
+
     // ✅ Mostrar opciones de conexión bien presentadas
     console.log(chalk.yellow("📡 ¿Cómo deseas conectarte?\n"));
     console.log(chalk.green("  [1] ") + chalk.white("📷 Escanear código QR"));
@@ -156,7 +156,7 @@ let modos = cargarModos();
                 printQRInTerminal: method === "1",
                 logger: pino({ level: "silent" }),
                 auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })) },
-                browser: method === "1" ? ["AzuraBot", "Safari", "1.0.0"] : ["Ubuntu", "Chrome", "23.0.00"],
+                browser: method === "1" ? ["AzuraBot", "Safari", "1.0.0"] : ["Ubuntu", "Chrome", "20.0.04"],
             };
 
             const sock = makeWASocket(socketSettings);
@@ -245,7 +245,7 @@ setInterval(limpiarAntidelete, 30 * 60 * 1000); // 30 min
 // Ejecutar una vez al inicio
 limpiarAntidelete();
 //cada 30 minutos antidelete          
-          
+
 
           // Función para revisar y actualizar grupos cada 5 segundos
 setInterval(async () => {
@@ -277,7 +277,7 @@ setInterval(async () => {
       }
     }
 //limpieza
-    
+
     // === REVISAR APERTURA AUTOMÁTICA ===
     const tiempoAbrirPath = path.resolve("./tiempo2.json");
     if (fs.existsSync(tiempoAbrirPath)) {
@@ -308,7 +308,7 @@ setInterval(async () => {
   }
 }, 5000); // Revisa cada 5 segundos
 //ok de abria onkkkkkk
-          
+
 // Listener para detectar cambios en los participantes de un grupo (bienvenida y despedida)
 sock.ev.on("group-participants.update", async (update) => {
   try {
@@ -409,14 +409,14 @@ if (fs.existsSync(welcomePath)) {
 }
     // Textos integrados para bienvenida y despedida
     const welcomeTexts = [
-      "¡Bienvenido(a)! M-ster Ultra Bot te recibe con los brazos abiertos 🤗✨. ¡Disfruta y comparte!",
-      "¡Hola! M-ster Ultra  Bot te abraza con alegría 🎉🤖. ¡Prepárate para grandes aventuras!",
-      "¡Saludos! M-ster Ultra  Bot te da la bienvenida para que descubras ideas brillantes 🚀🌟.",
-      "¡Bienvenido(a) al grupo! M-ster Ultra  Bot te invita a explorar un mundo de posibilidades 🤩💡.",
-      "¡Qué alegría verte! M-ster Ultra  Bot te recibe y te hace sentir en casa 🏠💖.",
+      "¡Bienvenido(a)! Azura Ultra 2.0 Bot te recibe con los brazos abiertos 🤗✨. ¡Disfruta y comparte!",
+      "¡Hola! Azura Ultra 2.0 Bot te abraza con alegría 🎉🤖. ¡Prepárate para grandes aventuras!",
+      "¡Saludos! Azura Ultra 2.0 Bot te da la bienvenida para que descubras ideas brillantes 🚀🌟.",
+      "¡Bienvenido(a) al grupo! Azura Ultra 2.0 Bot te invita a explorar un mundo de posibilidades 🤩💡.",
+      "¡Qué alegría verte! Azura Ultra 2.0 Bot te recibe y te hace sentir en casa 🏠💖.",
       "¡Hola! Gracias por unirte; Azura Ultra 2.0 Bot te saluda con entusiasmo 🎊😊.",
-      "¡Bienvenido(a)! Cada nuevo miembro es una chispa de inspiración en M-ster Ultra  Bot 🔥✨.",
-      "¡Saludos cordiales! M-ster Ultra Bot te envía un abrazo virtual 🤗💙.",
+      "¡Bienvenido(a)! Cada nuevo miembro es una chispa de inspiración en Azura Ultra 2.0 Bot 🔥✨.",
+      "¡Saludos cordiales! Azura Ultra 2.0 Bot te envía un abrazo virtual 🤗💙.",
       "¡Bienvenido(a)! Únete a la experiencia Azura Ultra 2.0 Bot y comparte grandes ideas 🎉🌈.",
       "¡Hola! Azura Ultra 2.0 Bot te da la bienvenida para vivir experiencias inolvidables 🚀✨!"
     ];
@@ -527,13 +527,14 @@ if (update.action === "add" && welcomeActivo) {
     console.error("Error en el evento group-participants.update:", error);
   }
 });
-           
+
             // 🟢 Consola de mensajes entrantes con diseño
 
 sock.ev.on("messages.upsert", async (messageUpsert) => {
   try {
     const msg = messageUpsert.messages[0];
     if (!msg) return;
-    
+
     const chatId = msg.key.remoteJid;
-    const isGrou
+    const isGroup = chatId.endsWith("@g.us");
+ 

@@ -43,7 +43,7 @@ Incluye **sistema RPG**, herramientas de **moderación avanzada**, **minijuegos*
 
 ⊱⋅ ──────────── ⋅⊰  
 
-# ⚙️ **Optimizado para Sky Ultra Plus**  
+# ⚙️ **Optimizado para *X HOS*  
 
 🌐 **Hosting oficial recomendado:**  
 

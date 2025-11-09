@@ -14931,7 +14931,7 @@ case "fb":
 
         // ==== CONFIG DE TU API SKY ====
         const API_BASE = process.env.API_BASE || "https://api-sky.ultraplus.click";
-        const API_KEY  = process.env.API_KEY  || "Russellxz";
+        const API_KEY  = process.env.API_KEY  || "5_PSiJRgHRVQ";
 
         // Llamar a tu API de Facebook
         const response = await axios.get(`${API_BASE}/api/download/facebook.js`, {
@@ -15011,7 +15011,7 @@ case "fb":
 
 🔧 API: api-sky.ultraplus.click
 
-❦𝑳𝑨 𝑺𝑼𝑲𝑰 𝑩𝑶𝑻❦`.trim();
+❦M-STER ULTRA BOT❦`.trim();
 
         // 📩 Enviar el video
         await sock.sendMessage(msg.key.remoteJid, {

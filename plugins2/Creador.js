@@ -6,7 +6,7 @@ const handler = async (msg, { conn }) => {
 
 Si tienes dudas, preguntas o sugerencias sobre el funcionamiento de *M-ster Ultra Subbot*, puedes contactar a su creador.
 
-📌 *Nombre:* Russell
+📌 *Nombre:* wilker s
 📌 *Número:* +5492644893953
 💬 *Toca el contacto para enviarle un mensaje directo.`;
 

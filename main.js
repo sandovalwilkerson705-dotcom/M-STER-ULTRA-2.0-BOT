@@ -739,7 +739,7 @@ case 'carga': {
         text: `✅ Actualización completada: Ya está al día.`
       }, { quoted: msg });
     } else {
-      const message = `✅ Actualización completada:\n\n${output}\n\n🔄 Reiniciando el servidor...`;
+      const message = `✅ El bot fue reiniciado exitosamente:\n\n${output}\n\n🔄 Reiniciando el servidor...`;
       
       // Enviar reacción de reinicio
       sock.sendMessage(msg.key.remoteJid, {

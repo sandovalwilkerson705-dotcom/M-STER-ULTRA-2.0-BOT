@@ -409,14 +409,14 @@ if (fs.existsSync(welcomePath)) {
 }
     // Textos integrados para bienvenida y despedida
     const welcomeTexts = [
-      "¡Bienvenido(a)! Azura Ultra 2.0 Bot te recibe con los brazos abiertos 🤗✨. ¡Disfruta y comparte!",
-      "¡Hola! Azura Ultra 2.0 Bot te abraza con alegría 🎉🤖. ¡Prepárate para grandes aventuras!",
-      "¡Saludos! Azura Ultra 2.0 Bot te da la bienvenida para que descubras ideas brillantes 🚀🌟.",
-      "¡Bienvenido(a) al grupo! Azura Ultra 2.0 Bot te invita a explorar un mundo de posibilidades 🤩💡.",
-      "¡Qué alegría verte! Azura Ultra 2.0 Bot te recibe y te hace sentir en casa 🏠💖.",
+      "¡Bienvenido(a)! M-ster Ultra Bot te recibe con los brazos abiertos 🤗✨. ¡Disfruta y comparte!",
+      "¡Hola! M-ster Ultra  Bot te abraza con alegría 🎉🤖. ¡Prepárate para grandes aventuras!",
+      "¡Saludos! M-ster Ultra  Bot te da la bienvenida para que descubras ideas brillantes 🚀🌟.",
+      "¡Bienvenido(a) al grupo! M-ster Ultra  Bot te invita a explorar un mundo de posibilidades 🤩💡.",
+      "¡Qué alegría verte! M-ster Ultra  Bot te recibe y te hace sentir en casa 🏠💖.",
       "¡Hola! Gracias por unirte; Azura Ultra 2.0 Bot te saluda con entusiasmo 🎊😊.",
-      "¡Bienvenido(a)! Cada nuevo miembro es una chispa de inspiración en Azura Ultra 2.0 Bot 🔥✨.",
-      "¡Saludos cordiales! Azura Ultra 2.0 Bot te envía un abrazo virtual 🤗💙.",
+      "¡Bienvenido(a)! Cada nuevo miembro es una chispa de inspiración en M-ster Ultra  Bot 🔥✨.",
+      "¡Saludos cordiales! M-ster Ultra Bot te envía un abrazo virtual 🤗💙.",
       "¡Bienvenido(a)! Únete a la experiencia Azura Ultra 2.0 Bot y comparte grandes ideas 🎉🌈.",
       "¡Hola! Azura Ultra 2.0 Bot te da la bienvenida para vivir experiencias inolvidables 🚀✨!"
     ];

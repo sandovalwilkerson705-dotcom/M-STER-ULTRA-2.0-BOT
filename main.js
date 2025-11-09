@@ -14792,7 +14792,7 @@ case "ig":
         const response = await axios.get(`${API_BASE}/api/download/instagram.js`, {
             params: { url: text },
             headers: { 
-                Authorization: `Bearer ${API_KEY}`,
+                Authorization: `Bearer ${API_BASE}`,
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
             },
             timeout: 30000
@@ -14930,7 +14930,7 @@ case "fb":
         const path = require('path');
 
         // ==== CONFIG DE TU API SKY ====
-        const API_BASE = process.env.API_BASE || "https://api-sky.ultraplus.click";
+        const API_BASE = process.env.API_BASE || "https://api-sky.ultraplus.click/api/download/facebook.js?url=";
         const API_KEY  = process.env.API_KEY  || "5_PSiJRgHRVQ";
 
         // Llamar a tu API de Facebook

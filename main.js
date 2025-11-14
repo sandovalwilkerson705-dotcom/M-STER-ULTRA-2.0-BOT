@@ -739,7 +739,7 @@ case 'carga': {
         text: `✅ Actualización completada: Ya está al día.`
       }, { quoted: msg });
     } else {
-      const message = `✅ El bot fue reiniciado exitosamente:\n\n${output}\n\n🔄 Reiniciando el servidor...`;
+      const message = `✅ El bot esta siendo reiniciado:\n\n${output}\n\n🔄 Reiniciando el servidor...`;
       
       // Enviar reacción de reinicio
       sock.sendMessage(msg.key.remoteJid, {
@@ -826,7 +826,7 @@ case 'whatmusic': {
 
         const banner = `
 ╔══════════════════╗
-║  ✦ 𝘼𝙕𝙐𝙍𝘼 𝙐𝙇𝙏𝙍𝘼 𝟮.𝟬 𝗕𝗢𝗧 ✦
+║✦> M-STER ULTRA BOT ✦
 ╚══════════════════╝
 
 🎵 *Canción detectada:*  
@@ -968,7 +968,7 @@ case 'whatmusic6': {
 
         const banner = `
 ╔══════════════════╗
-║ ✦ 𝘼𝙕𝙐𝙍𝘼 𝙐𝙇𝙏𝙍𝘼 𝟮.𝟬 𝗕𝗢𝗧 ✦
+║✦> M-STER ULTRA BOT ✦
 ╚══════════════════╝
 
 🎵 *Canción detectada:*  

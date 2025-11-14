@@ -1,4 +1,4 @@
-```case 'play3': {
+case 'play3': {
     const fetch = require('node-fetch');
     const axios = require('axios');
 

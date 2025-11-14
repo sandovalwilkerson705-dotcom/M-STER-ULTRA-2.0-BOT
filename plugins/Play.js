@@ -1,4 +1,4 @@
-// commands/play.js — usa Sky API (sin límites) y mantiene reacciones/respuestas
+// commands/play.js
 const axios = require("axios");
 const yts = require("yt-search");
 const fs = require("fs");
@@ -8,26 +8,12 @@ const { promisify } = require("util");
 const { pipeline } = require("stream");
 const streamPipe = promisify(pipeline);
 
-// Sky API
+// ==== CONFIG DE TU API ====
 const API_BASE = process.env.API_BASE || "https://api-sky.ultraplus.click";
-const API_KEY  = process.env.API_KEY  || "Russellxz";
+const API_KEY  = process.env.API_KEY  || "Russellxz"; // <-- tu API Key
 
 // Almacena tareas pendientes por previewMessageId
 const pending = {};
-
-// --- helper Sky API ---
-async function skyYT(url, format) {
-  const { data, status } = await axios.get(`${API_BASE}/api/download/yt.php`, {
-    params: { url, format }, // 'audio' | 'video'
-    headers: { Authorization: `Bearer ${API_KEY}` },
-    timeout: 60000,
-    validateStatus: s => s >= 200 && s < 600
-  });
-  if (status !== 200 || !data || data.status !== "true" || !data.data) {
-    throw new Error(data?.error || `HTTP ${status}`);
-  }
-  return data.data; // { title, thumbnail, duration, audio?, video? }
-}
 
 // Utilidad: descarga a disco y devuelve ruta
 async function downloadToFile(url, filePath) {
@@ -36,18 +22,30 @@ async function downloadToFile(url, filePath) {
   return filePath;
 }
 
-module.exports = async (msg, { conn, text }) => {
-  const subID = (conn.user.id || "").split(":")[0] + "@s.whatsapp.net";
-  const pref = (() => {
-    try {
-      const p = JSON.parse(fs.readFileSync("prefixes.json", "utf8"));
-      return p[subID] || ".";
-    } catch {
-      return ".";
-    }
-  })();
+// Utilidad: tamaño en MB (decimal)
+function fileSizeMB(filePath) {
+  const b = fs.statSync(filePath).size;
+  return b / (1024 * 1024);
+}
 
-  if (!text) {
+// Llama a tu API /api/download/yt.php
+async function callMyApi(url, format) {
+  const r = await axios.get(`${API_BASE}/api/download/yt.php`, {
+    params: { url, format }, // format: 'audio' | 'video'
+    headers: { Authorization: `Bearer ${API_KEY}` },
+    timeout: 60000
+  });
+  // Estructura esperada: { status:'true', data:{ title, audio, video, thumbnail, ... } }
+  if (!r.data || r.data.status !== "true" || !r.data.data) {
+    throw new Error("API inválida o sin datos");
+  }
+  return r.data.data;
+}
+
+module.exports = async (msg, { conn, text }) => {
+  const pref = global.prefixes?.[0] || ".";
+
+  if (!text || !text.trim()) {
     return conn.sendMessage(
       msg.key.remoteJid,
       { text: `✳️ Usa:\n${pref}play <término>\nEj: *${pref}play* bad bunny diles` },
@@ -75,27 +73,24 @@ module.exports = async (msg, { conn, text }) => {
   const viewsFmt = (views || 0).toLocaleString();
 
   const caption = `
-╔═══════════════╗
-║✦ 𝘼𝙕𝙐𝙍𝘼 𝙐𝗹𝘁𝗿𝗮 2.0 BOT✦
-╚═══════════════╝
-📀 Info del video:
-╭───────────────╮
-├ 🎼 Título: ${title}
-├ ⏱️ Duración: ${duration}
-├ 👁️ Vistas: ${viewsFmt}
-├ 👤 Autor: ${author?.name || author || "Desconocido"}
-└ 🔗 Link: ${videoUrl}
-╰───────────────╯
-📥 Opciones de Descarga (reacciona o responde):
-┣ 👍 Audio MP3     (1 / audio)
-┣ ❤️ Video MP4     (2 / video)
-┣ 📄 Audio Doc     (4 / audiodoc)
-┗ 📁 Video Doc     (3 / videodoc)
+❦𝑳𝑨 𝑺𝑼𝑲𝑰 𝑩𝑶𝑻❦
 
-✦ Source: api-sky.ultraplus.click
-═════════════════════
-   𖥔 Azura Ultra 2.0 Bot 𖥔
-═════════════════════`.trim();
+📀 𝙸𝚗𝚏𝚘 𝚍𝚎𝚕 𝚟𝚒𝚍𝚎𝚘:
+❥ 𝑻𝒊𝒕𝒖𝒍𝒐: ${title}
+❥ 𝑫𝒖𝒓𝒂𝒄𝒊𝒐𝒏: ${duration}
+❥ 𝑽𝒊𝒔𝒕𝒂𝒔: ${viewsFmt}
+❥ 𝑨𝒖𝒕𝒐𝒓: ${author?.name || author || "Desconocido"}
+❥ 𝑳𝒊𝒏𝒌: ${videoUrl}
+❥ API: api-sky.ultraplus.click
+
+📥 𝙾𝚙𝚌𝚒𝚘𝚗𝚎𝚜 𝚍𝚎 𝙳𝚎𝚜𝚌𝚊𝚛𝚐𝚊 (reacciona o responde al mensaje):
+☛ 👍 Audio MP3     (1 / audio)
+☛ ❤️ Video MP4     (2 / video)
+☛ 📄 Audio Doc     (4 / audiodoc)
+☛ 📁 Video Doc     (3 / videodoc)
+
+❦𝑳𝑨 𝑺𝑼𝑲𝑰 𝑩𝑶𝑻❦
+`.trim();
 
   // envía preview
   const preview = await conn.sendMessage(
@@ -132,7 +127,7 @@ module.exports = async (msg, { conn, text }) => {
           }
         }
 
-        // 2) RESPUESTAS CITADAS (1/2/3/4)
+        // 2) RESPUESTAS CITADAS
         try {
           const context = m.message?.extendedTextMessage?.contextInfo;
           const citado = context?.stanzaId;
@@ -178,7 +173,7 @@ module.exports = async (msg, { conn, text }) => {
   }
 };
 
-async function handleDownload(conn, job, choice, quotedMsg) {
+async function handleDownload(conn, job, choice) {
   const mapping = {
     "👍": "audio",
     "❤️": "video",
@@ -197,24 +192,27 @@ async function handleDownload(conn, job, choice, quotedMsg) {
 async function downloadAudio(conn, job, asDocument, quoted) {
   const { chatId, videoUrl, title } = job;
 
-  // 1) Pide a TU Sky API (audio)
-  const d = await skyYT(videoUrl, "audio");
-  const mediaUrl = d.audio || d.video; // fallback si el upstream solo da video
+  // 1) Pide a TU API audio (descuenta soli en servidor)
+  const data = await callMyApi(videoUrl, "audio");
+  const mediaUrl = data.audio || data.video; // fallback si el upstream devolviera solo video
+
   if (!mediaUrl) throw new Error("No se pudo obtener audio");
 
   // 2) Descarga + (opcional) convierte a MP3 si no es mp3/mpeg
   const tmp = path.join(__dirname, "../tmp");
   if (!fs.existsSync(tmp)) fs.mkdirSync(tmp, { recursive: true });
 
+  // detecta extensión
   const urlPath = new URL(mediaUrl).pathname || "";
-  const ext = (urlPath.split(".").pop() || "bin").toLowerCase();
+  const ext = (urlPath.split(".").pop() || "").toLowerCase();
   const isMp3 = ext === "mp3";
 
-  const inFile  = path.join(tmp, `${Date.now()}_in.${ext}`);
+  const inFile  = path.join(tmp, `${Date.now()}_in.${ext || "bin"}`);
   await downloadToFile(mediaUrl, inFile);
 
   let outFile = inFile;
   if (!isMp3) {
+    // convertir a mp3 (si falla, mandamos el original como documento)
     const tryOut = path.join(tmp, `${Date.now()}_out.mp3`);
     try {
       await new Promise((resolve, reject) =>
@@ -227,12 +225,23 @@ async function downloadAudio(conn, job, asDocument, quoted) {
           .on("error", reject)
       );
       outFile = tryOut;
+      // limpia entrada original
       try { fs.unlinkSync(inFile); } catch {}
-    } catch {
-      outFile = inFile; // si falla la conversión, enviamos el original
+    } catch (e) {
+      // fallback: mandamos el original como documento de audio
+      outFile = inFile;
     }
   }
 
+  // 3) Límite ~99MB
+  const sizeMB = fileSizeMB(outFile);
+  if (sizeMB > 99) {
+    try { fs.unlinkSync(outFile); } catch {}
+    await conn.sendMessage(chatId, { text: `❌ El archivo de audio pesa ${sizeMB.toFixed(2)}MB (>99MB).` }, { quoted });
+    return;
+  }
+
+  // 4) Enviar
   const buffer = fs.readFileSync(outFile);
   await conn.sendMessage(chatId, {
     [asDocument ? "document" : "audio"]: buffer,
@@ -246,9 +255,10 @@ async function downloadAudio(conn, job, asDocument, quoted) {
 async function downloadVideo(conn, job, asDocument, quoted) {
   const { chatId, videoUrl, title } = job;
 
-  // 1) Pide a TU Sky API (video)
-  const d = await skyYT(videoUrl, "video");
-  const mediaUrl = d.video || d.audio; // fallback
+  // 1) Pide a TU API video (descuenta soli en servidor)
+  const data = await callMyApi(videoUrl, "video");
+  const mediaUrl = data.video || data.audio; // fallback
+
   if (!mediaUrl) throw new Error("No se pudo obtener video");
 
   // 2) Descarga
@@ -257,15 +267,24 @@ async function downloadVideo(conn, job, asDocument, quoted) {
   const file = path.join(tmp, `${Date.now()}_vid.mp4`);
   await downloadToFile(mediaUrl, file);
 
-  // 3) Enviar (SIN límite propio)
+  // 3) Límite ~99MB
+  const sizeMB = fileSizeMB(file);
+  if (sizeMB > 99) {
+    try { fs.unlinkSync(file); } catch {}
+    await conn.sendMessage(chatId, { text: `❌ El video pesa ${sizeMB.toFixed(2)}MB (>99MB).` }, { quoted });
+    return;
+  }
+
+  // 4) Enviar (solo añadí la línea de marca)
   await conn.sendMessage(chatId, {
     [asDocument ? "document" : "video"]: fs.readFileSync(file),
     mimetype: "video/mp4",
     fileName: `${title}.mp4`,
-    caption: asDocument ? undefined : `🎬 Aquí tiene su video.\n✦ Source: api-sky.ultraplus.click\n© Azura Ultra`
+    caption: `🎬 𝐀𝐪𝐮𝐢́ 𝐭𝐢𝐞𝐧𝐞𝐬 𝐭𝐮 𝐯𝐢𝐝𝐞𝐨~ 💫\n• API: api-sky.ultraplus.click\n© M-ster bot`
   }, { quoted });
 
   try { fs.unlinkSync(file); } catch {}
 }
 
+// 🔔 Solo cambié el nombre del comando aquí:
 module.exports.command = ["play"];
